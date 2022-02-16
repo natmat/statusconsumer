@@ -7,7 +7,12 @@ class Status_Message {
     o['application'] = application;
     o['message'] = message;
     // console.log(JSON.stringify(o));
+
     Status_Message.statuses.push(JSON.stringify(o));
+    if (Status_Message.statuses.length > 15) {
+        console.log("EMPTY");
+        Status_Message.statuses = [];
+    }
   }
 }
 
@@ -19,6 +24,10 @@ Status_Message.print_sm = function () {
 
 Status_Message.statuses = [];
 
+function add_message() {
+    new Status_Message("app_" + Math.floor(100*Math.random()).toString());
+}
+
 function main() {
   console.log("## status messaages ##");
   sm = new Status_Message("config", "true");
@@ -28,7 +37,17 @@ function main() {
   }   
 
   // https://nodejs.org/en/docs/guides/timers-in-node/
-  t = setInterval(Status_Message.print_sm, 1500);
+  const tid = setInterval(Status_Message.print_sm, 1000);
+  const tsm = setInterval(add_message, 100);
+
+  function killTimeOut() {
+    // clearInterval(tid); 
+    clearInterval(tsm);
+    console.log("DONE");
+    };
+    
+    
+    setTimeout(killTimeOut, 10000);
 }
 
 if (require.main === module) {
